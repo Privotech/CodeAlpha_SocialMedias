@@ -1,0 +1,2 @@
+import jwt from 'jsonwebtoken'; import { User } from '../models/index.js';
+export async function auth(req,res,next){try{const token=(req.headers.authorization||'').replace(/^Bearer\s+/i,'');if(!token)return res.status(401).json({message:'Sign in to continue'});const data=jwt.verify(token,process.env.JWT_SECRET);req.user=await User.findById(data.id);if(!req.user)return res.status(401).json({message:'Account no longer exists'});next()}catch(e){res.status(401).json({message:'Invalid or expired session'})}}
